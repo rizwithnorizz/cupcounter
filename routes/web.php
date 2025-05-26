@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\RedeemNotification;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,10 @@ Route::middleware('auth')->group(function () {
     })->name('redeem');
     Route::get('/api/redeemers', [Data::class, 'getRedeemers'])->name('api.redeemers');
 });
+
+Route::get('/test-redeem', function () {
+    return event(new RedeemNotification(1, 'Test message'));
+})->name('test-redeem');
 
 require __DIR__.'/auth.php';
 
