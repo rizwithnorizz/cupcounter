@@ -8,6 +8,9 @@ use Inertia\Inertia;
 use App\Http\Controllers\Data;
     
 Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
     return Inertia::render('Landing');
 });
 

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import confetti from 'canvas-confetti';
 import Dropdown from '@/Components/Dropdown';
+import PrimaryButton from '@/Components/PrimaryButton';
 
 interface Redeemer {
     id: number;
@@ -142,6 +143,10 @@ export default function Dashboard() {
         setFilterYear('');
     };
 
+    const tryConfetti = () => {
+        triggerConfetti();
+        setConfettiShown(true);
+    };
     const triggerConfetti = () => {
         const duration = 5 * 1000;
         const animationEnd = Date.now() + duration;
@@ -256,7 +261,9 @@ export default function Dashboard() {
                             <CupCounter className="mb-2" />
                         </div>
                     </div>
-
+                    <PrimaryButton className="bg-gray-500 text-gray-900 mb-4" onClick={tryConfetti}>
+                        Trigger Confetti
+                    </PrimaryButton>
                     {/* Redeemer Details Section */}
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <div className="p-6">
