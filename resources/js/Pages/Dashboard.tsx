@@ -123,12 +123,13 @@ export default function Dashboard() {
     useEffect(() => {
         if (window.Echo) {
 
-            // Listen for the fully qualified event name
             window.Echo.channel('redeem').listen("RedeemNotification",
                 (event: {
                     success: boolean;
                     message: string;
                 }) => {
+                    setNotification(event.message);
+                    setTimeout(() => setNotification(''), 5000);
                     fetchRedeemers();
                 }
             );
