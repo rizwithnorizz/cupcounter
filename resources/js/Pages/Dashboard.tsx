@@ -30,7 +30,8 @@ export default function Dashboard() {
     const [uniquePrograms, setUniquePrograms] = useState<string[]>([]);
     const [uniqueYears, setUniqueYears] = useState<number[]>([]);
 
-    useEffect(() => {
+
+    const fetchRedeemers = () => {
         axios.get('/api/redeemers')
             .then(response => {
                 const data = response.data;
@@ -47,6 +48,9 @@ export default function Dashboard() {
                 console.error('Error fetching redeemers:', error);
                 setLoading(false);
             });
+    }
+    useEffect(() => {
+        fetchRedeemers();
 
         const updateTimer = () => {
             const now = new Date();
@@ -125,10 +129,7 @@ export default function Dashboard() {
                     success: boolean;
                     message: string;
                 }) => {
-                    setNotification(
-                        event.message
-                    );
-                    setTimeout(() => setNotification(''), 5000);
+                    fetchRedeemers();
                 }
             );
 
