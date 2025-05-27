@@ -27,6 +27,10 @@ class Data extends Controller
             event(new RedeemNotification(0, 'You have already claimed your free coffee!'));
             return redirect()->back()->with('message', 'You have already claimed your free coffee!');
         }
+        if (Redeem::where('created_at', '>=', now()->startOfDay())->count() >= 70){
+            event(new RedeemNotification(0, 'Daily limit reached!'));
+            return redirect()->back()->with('message', 'Daily limit reached!');
+        }
         Store::dispatch($validate['name'], $validate['id'], $validate['year'], $validate['program']);
         return redirect()->back()->with('message', 'Coffee claimed successfully!');
         } catch (\Exception $e) {

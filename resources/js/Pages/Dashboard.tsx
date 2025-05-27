@@ -63,21 +63,34 @@ export default function Dashboard() {
             };
             setCurrentDate(now.toLocaleDateString('en-US', options));
 
-            const targetTime = new Date(now);
-            targetTime.setHours(13, 0, 0, 0);
+            // Set working hours: 10am to 2pm
+            const startTime = new Date(now);
+            startTime.setHours(10, 0, 0, 0);
+            
+            const endTime = new Date(now);
+            endTime.setHours(14, 0, 0, 0);
 
-            if (now > targetTime) {
-                targetTime.setDate(targetTime.getDate() + 1);
+            // Calculate time remaining in working hours
+            let timeLeft = 0;
+            
+            if (now < startTime) {
+                // Before working hours
+                setTimeRemaining("Not started yet");
+            } else if (now > endTime) {
+                // After working hours
+                setTimeRemaining("Ended for today");
+            } else {
+                // During working hours
+                timeLeft = endTime.getTime() - now.getTime();
+                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                
+                setTimeRemaining(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
             }
 
-            const diff = targetTime.getTime() - now.getTime();
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-            setTimeRemaining(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
-
-            if (now.getHours() === 13 && now.getMinutes() === 0 && !confettiShown) {
+            // Trigger confetti at 2pm
+            if (now.getHours() === 14 && now.getMinutes() === 0 && !confettiShown) {
                 triggerConfetti();
                 setConfettiShown(true);
             }
@@ -253,7 +266,7 @@ export default function Dashboard() {
                             <div className="flex flex-col items-center justify-center text-center">
                                 <p className="text-md text-gray-600 mb-4">{currentDate}</p>
                                 <div className="bg-blue-50 px-8 py-6 rounded-lg w-full max-w-md">
-                                    <p className="text-lg text-gray-600 mb-2">Countdown to 1:00 PM</p>
+                                    <p className="text-lg text-gray-600 mb-2">Working Hours Remaining</p>
                                     <p className="text-5xl font-bold text-blue-600 font-mono tracking-wider">{timeRemaining}</p>
                                 </div>
                             </div>
@@ -397,6 +410,9 @@ export default function Dashboard() {
         </div>
     );
 }
+
+
+
 
 
 
