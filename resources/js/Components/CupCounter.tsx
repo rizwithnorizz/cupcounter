@@ -8,6 +8,19 @@ export default function CupCounter({ className = '' }: CupCounterProps) {
         redeemed_today: 0, remaining: 0
     }); const [loading, setLoading] = useState(true);
     useEffect(() => {
+
+        if (window.Echo) {
+            window.Echo.channel('redeem').listen('RedeemNotification', (event: { message: string, success: boolean }) => {
+
+                axios.get('/remaining-cups').then(response => {
+                    setCupData(response.data); setLoading(false);
+                }).catch(error => {
+                    console.error('Error fetching cup data:', error); setLoading(false);
+                });
+            });
+        }
+    }, []);
+    useEffect(() => {
         axios.get('/remaining-cups').then(response => {
             setCupData(response.data); setLoading(false);
         }).catch(error => {
